@@ -1,51 +1,85 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perencanaan Produksi</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Optimasi Produksi dengan Berbagai Satuan Waktu</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Perencanaan Produksi di Industri Manufaktur</h1>
-        
-        <!-- Formulir input data -->
-        <form id="inputForm">
-            <label for="keuntunganA">Keuntungan Produk A (Rp):</label>
-            <input type="number" id="keuntunganA" value="5000" required>
-            
-            <label for="keuntunganB">Keuntungan Produk B (Rp):</label>
-            <input type="number" id="keuntunganB" value="7000" required>
-            
-            <label for="jamMesinA">Jam Mesin Produk A (jam/unit):</label>
-            <input type="number" id="jamMesinA" value="1" required>
-            
-            <label for="jamMesinB">Jam Mesin Produk B (jam/unit):</label>
-            <input type="number" id="jamMesinB" value="2" required>
-            
-            <label for="jamKerjaA">Jam Tenaga Kerja Produk A (jam/unit):</label>
-            <input type="number" id="jamKerjaA" value="4" required>
-            
-            <label for="jamKerjaB">Jam Tenaga Kerja Produk B (jam/unit):</label>
-            <input type="number" id="jamKerjaB" value="3" required>
-            
-            <label for="totalJamMesin">Total Jam Mesin Tersedia:</label>
-            <input type="number" id="totalJamMesin" value="10" required>
-            
-            <label for="totalJamKerja">Total Jam Tenaga Kerja Tersedia:</label>
-            <input type="number" id="totalJamKerja" value="25" required>
-            
-            <button type="submit">Hitung Optimasi</button>
-        </form>
+  <div class="container">
+    <h1>Optimasi Produksi</h1>
+    <form id="optimization-form">
+      <!-- Input Keuntungan Produk -->
+      <label for="profit-a">Keuntungan Produk A (Rp):</label>
+      <input type="number" id="profit-a" value="500" placeholder="Masukkan keuntungan untuk Produk A" required>
 
-        <!-- Area untuk menampilkan hasil -->
-        <div id="hasil">
-            <h2>Hasil Optimasi</h2>
-            <p id="hasilText">Masukkan data dan klik 'Hitung Optimasi' untuk melihat hasil.</p>
-        </div>
-    </div>
+      <label for="profit-b">Keuntungan Produk B (Rp):</label>
+      <input type="number" id="profit-b" value="700" placeholder="Masukkan keuntungan untuk Produk B" required>
 
-    <script src="script.js"></script>
+      <!-- Input Jam Mesin untuk Produk A -->
+      <label for="time-machine-product-a">Jam Mesin untuk Produk A:</label>
+      <input type="number" id="time-machine-product-a" value="15" placeholder="Masukkan waktu" required>
+      <select id="time-unit-machine-product-a">
+        <option value="seconds">Detik</option>
+        <option value="minutes" selected>Menit</option>
+        <option value="hours">Jam</option>
+        <option value="days">Hari</option>
+      </select>
+
+      <!-- Input Jam Mesin untuk Produk B -->
+      <label for="time-machine-product-b">Jam Mesin untuk Produk B:</label>
+      <input type="number" id="time-machine-product-b" value="20" placeholder="Masukkan waktu" required>
+      <select id="time-unit-machine-product-b">
+        <option value="seconds">Detik</option>
+        <option value="minutes" selected>Menit</option>
+        <option value="hours" >Jam</option>
+        <option value="days">Hari</option>
+      </select>
+
+      <!-- Input Jam Tenaga Kerja untuk Produk A -->
+      <label for="time-labor-product-a">Jam Tenaga Kerja untuk Produk A:</label>
+      <input type="number" id="time-labor-product-a" value="1" placeholder="Masukkan waktu" required>
+      <select id="time-unit-labor-product-a">
+        <option value="seconds">Detik</option>
+        <option value="minutes">Menit</option>
+        <option value="hours" selected>Jam</option>
+        <option value="days">Hari</option>
+      </select>
+
+      <!-- Input Jam Tenaga Kerja untuk Produk B -->
+      <label for="time-labor-product-b">Jam Tenaga Kerja untuk Produk B:</label>
+      <input type="number" id="time-labor-product-b" value="2" placeholder="Masukkan waktu" required>
+      <select id="time-unit-labor-product-b">
+        <option value="seconds">Detik</option>
+        <option value="minutes">Menit</option>
+        <option value="hours" selected>Jam</option>
+        <option value="days">Hari</option>
+      </select>
+
+      <!-- Input Total Jam yang Tersedia -->
+      <label for="total-machine-hours">Total Jam Mesin Tersedia:</label>
+      <input type="number" id="total-machine-hours" value="50" placeholder="Masukkan total jam mesin" required>
+
+      <label for="total-labor-hours">Total Jam Tenaga Kerja Tersedia:</label>
+      <input type="number" id="total-labor-hours" value="75" placeholder="Masukkan total jam tenaga kerja" required>
+
+<!-- Tambahkan dropdown di bagian input HTML -->
+<label for="time-period">Pilih Periode Waktu:</label>
+<select id="time-period">
+  <option value="day">Per Hari</option>
+  <option value="week">Per Minggu</option>
+  <option value="month">Per Bulan</option>
+</select>
+
+
+      <!-- Tombol Hitung -->
+      <button type="button" onclick="calculateOptimization()">Hitung Optimasi</button>
+    </form>
+
+    <!-- Hasil -->
+    <div id="result" class="result"></div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
