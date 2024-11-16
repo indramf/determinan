@@ -1,85 +1,118 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Optimasi Produksi dengan Berbagai Satuan Waktu</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimasi Produksi</title>
+    <link rel="stylesheet" href="styles.css">
+
 </head>
 <body>
   <div class="container">
     <h1>Optimasi Produksi</h1>
-    <form id="optimization-form">
-      <!-- Input Keuntungan Produk -->
-      <label for="profit-a">Keuntungan Produk A (Rp):</label>
-      <input type="number" id="profit-a" value="500" placeholder="Masukkan keuntungan untuk Produk A" required>
-
-      <label for="profit-b">Keuntungan Produk B (Rp):</label>
-      <input type="number" id="profit-b" value="700" placeholder="Masukkan keuntungan untuk Produk B" required>
-
-      <!-- Input Jam Mesin untuk Produk A -->
-      <label for="time-machine-product-a">Jam Mesin untuk Produk A:</label>
-      <input type="number" id="time-machine-product-a" value="15" placeholder="Masukkan waktu" required>
-      <select id="time-unit-machine-product-a">
-        <option value="seconds">Detik</option>
-        <option value="minutes" selected>Menit</option>
+    
+      <!-- Pilihan jumlah produk -->
+      <label for="product-count">Jumlah Produk:</label>
+      <select id="product-count" onchange="toggleProductC()">
+        <option value="2">2 Produk</option>
+        <option value="3">3 Produk</option>
+      </select>
+      
+      <!-- Input untuk Produk A -->
+      <h3>Produk A</h3>
+    <label for="profit-a">Keuntungan per unit:</label>
+    <input type="number" id="profit-a" required><br>
+    
+    <label for="time-machine-product-a">Waktu mesin per unit:</label>
+    <input type="number" id="time-machine-product-a" required>
+    <select id="time-unit-machine-product-a">
+      <option value="seconds">Detik</option>
+        <option value="minutes">Menit</option>
         <option value="hours">Jam</option>
         <option value="days">Hari</option>
-      </select>
+      </select><br>
+    
+    <label for="time-labor-product-a">Waktu tenaga kerja per unit:</label>
+    <input type="number" id="time-labor-product-a" required>
+    <select id="time-unit-labor-product-a">
+      <option value="seconds">Detik</option>
+      <option value="minutes">Menit</option>
+      <option value="hours">Jam</option>
+      <option value="days">Hari</option>
+    </select><br>
+    
+    <!-- Input untuk Produk B -->
+    <h3>Produk B</h3>
+    <label for="profit-b">Keuntungan per unit:</label>
+    <input type="number" id="profit-b" required><br>
+    
+    <label for="time-machine-product-b">Waktu mesin per unit:</label>
+    <input type="number" id="time-machine-product-b" required>
+    <select id="time-unit-machine-product-b">
+      <option value="seconds">Detik</option>
+      <option value="minutes">Menit</option>
+      <option value="hours">Jam</option>
+      <option value="days">Hari</option>
+    </select><br>
+    
+    <label for="time-labor-product-b">Waktu tenaga kerja per unit:</label>
+    <input type="number" id="time-labor-product-b" required>
+    <select id="time-unit-labor-product-b">
+      <option value="seconds">Detik</option>
+      <option value="minutes">Menit</option>
+      <option value="hours">Jam</option>
+      <option value="days">Hari</option>
+    </select><br>
 
-      <!-- Input Jam Mesin untuk Produk B -->
-      <label for="time-machine-product-b">Jam Mesin untuk Produk B:</label>
-      <input type="number" id="time-machine-product-b" value="20" placeholder="Masukkan waktu" required>
-      <select id="time-unit-machine-product-b">
-        <option value="seconds">Detik</option>
-        <option value="minutes" selected>Menit</option>
-        <option value="hours" >Jam</option>
-        <option value="days">Hari</option>
-      </select>
+    <!-- Input untuk Produk C (ditampilkan jika jumlah produk = 3) -->
+    <div id="product-c-fields">
+        <h3>Produk C</h3>
+        <label for="profit-c">Keuntungan per unit:</label>
+        <input type="number" id="profit-c"><br>
+        
+        <label for="time-machine-product-c">Waktu mesin per unit:</label>
+        <input type="number" id="time-machine-product-c">
+        <select id="time-unit-machine-product-c">
+            <option value="seconds">Detik</option>
+            <option value="minutes">Menit</option>
+            <option value="hours">Jam</option>
+            <option value="days">Hari</option>
+        </select><br>
+        
+        <label for="time-labor-product-c">Waktu tenaga kerja per unit:</label>
+        <input type="number" id="time-labor-product-c">
+        <select id="time-unit-labor-product-c">
+            <option value="seconds">Detik</option>
+            <option value="minutes">Menit</option>
+            <option value="hours">Jam</option>
+            <option value="days">Hari</option>
+        </select><br>
+      </div>
+      
+      <!-- Input untuk total jam mesin dan tenaga kerja -->
+      <h3>Input Jam Kerja</h3>
+      <label for="total-machine-hours">Total jam mesin tersedia:</label>
+      <input type="number" id="total-machine-hours" required><br>
+      
+    <label for="total-labor-hours">Total jam tenaga kerja tersedia:</label>
+    <input type="number" id="total-labor-hours" required><br>
 
-      <!-- Input Jam Tenaga Kerja untuk Produk A -->
-      <label for="time-labor-product-a">Jam Tenaga Kerja untuk Produk A:</label>
-      <input type="number" id="time-labor-product-a" value="1" placeholder="Masukkan waktu" required>
-      <select id="time-unit-labor-product-a">
-        <option value="seconds">Detik</option>
-        <option value="minutes">Menit</option>
-        <option value="hours" selected>Jam</option>
-        <option value="days">Hari</option>
-      </select>
-
-      <!-- Input Jam Tenaga Kerja untuk Produk B -->
-      <label for="time-labor-product-b">Jam Tenaga Kerja untuk Produk B:</label>
-      <input type="number" id="time-labor-product-b" value="2" placeholder="Masukkan waktu" required>
-      <select id="time-unit-labor-product-b">
-        <option value="seconds">Detik</option>
-        <option value="minutes">Menit</option>
-        <option value="hours" selected>Jam</option>
-        <option value="days">Hari</option>
-      </select>
-
-      <!-- Input Total Jam yang Tersedia -->
-      <label for="total-machine-hours">Total Jam Mesin Tersedia:</label>
-      <input type="number" id="total-machine-hours" value="50" placeholder="Masukkan total jam mesin" required>
-
-      <label for="total-labor-hours">Total Jam Tenaga Kerja Tersedia:</label>
-      <input type="number" id="total-labor-hours" value="75" placeholder="Masukkan total jam tenaga kerja" required>
-
-<!-- Tambahkan dropdown di bagian input HTML -->
-<label for="time-period">Pilih Periode Waktu:</label>
-<select id="time-period">
-  <option value="day">Per Hari</option>
-  <option value="week">Per Minggu</option>
-  <option value="month">Per Bulan</option>
-</select>
-
-
-      <!-- Tombol Hitung -->
-      <button type="button" onclick="calculateOptimization()">Hitung Optimasi</button>
-    </form>
-
-    <!-- Hasil -->
-    <div id="result" class="result"></div>
-  </div>
-  <script src="script.js"></script>
+    <!-- Pilihan periode waktu -->
+    <label for="time-period">Periode Waktu:</label>
+    <select id="time-period">
+      <option value="day">Harian</option>
+        <option value="week">Mingguan</option>
+        <option value="month">Bulanan</option>
+      </select><br><br>
+      
+      <!-- Tombol untuk menghitung optimasi -->
+      <button onclick="calculateOptimization()">Hitung Optimasi</button>
+      
+      <!-- Hasil output -->
+      <div id="result" class="error" style="display:none;"></div>
+    </div>
+      
+      <!-- Skrip JavaScript -->
+    <script src="script.js"></script>
 </body>
 </html>

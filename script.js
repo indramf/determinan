@@ -1,6 +1,11 @@
-// script.js
+// Fungsi untuk menampilkan/menyembunyikan input Produk C berdasarkan pilihan jumlah produk
+function toggleProductC() {
+  const productCount = document.getElementById('product-count').value;
+  const productCFields = document.getElementById('product-c-fields');
+  productCFields.style.display = productCount === '3' ? 'block' : 'none';
+}
 
-// Fungsi konversi waktu ke jam (tidak ada perubahan dari kode sebelumnya)
+// Fungsi konversi waktu ke jam
 function convertToHours(value, unit) {
   switch (unit) {
     case 'seconds':
@@ -16,8 +21,6 @@ function convertToHours(value, unit) {
   }
 }
 
-// console.log("waktu " + convertToHours(value, unit));
-
 // Fungsi konversi waktu berdasarkan periode
 function convertTimeBasedOnPeriod(hours, period) {
   switch (period) {
@@ -32,7 +35,7 @@ function convertTimeBasedOnPeriod(hours, period) {
   }
 }
 
-// Fungsi untuk validasi input (sama seperti sebelumnya)
+// Fungsi untuk validasi input
 function validateInput(value) {
   if (value < 0) {
     return 'Nilai tidak boleh negatif.';
@@ -43,9 +46,11 @@ function validateInput(value) {
   return null;
 }
 
-// Fungsi hitung optimasi yang diperbarui
+// Fungsi utama untuk menghitung optimasi
 function calculateOptimization() {
-  // Ambil nilai input
+  const productCount = parseInt(document.getElementById('product-count').value);
+
+  // Ambil nilai input untuk Produk A dan B
   const profitA = parseFloat(document.getElementById('profit-a').value);
   const profitB = parseFloat(document.getElementById('profit-b').value);
 
@@ -67,6 +72,16 @@ function calculateOptimization() {
   // Ambil periode waktu
   const period = document.getElementById('time-period').value;
 
+  // Ambil nilai input untuk Produk C jika produkCount adalah 3
+  let profitC = 0, timeMachineProductC = 0, unitMachineProductC = '', timeLaborProductC = 0, unitLaborProductC = '';
+  if (productCount === 3) {
+    profitC = parseFloat(document.getElementById('profit-c').value);
+    timeMachineProductC = parseFloat(document.getElementById('time-machine-product-c').value);
+    unitMachineProductC = document.getElementById('time-unit-machine-product-c').value;
+    timeLaborProductC = parseFloat(document.getElementById('time-labor-product-c').value);
+    unitLaborProductC = document.getElementById('time-unit-labor-product-c').value;
+  }
+
   // Validasi input
   const errors = [
     validateInput(profitA),
@@ -77,12 +92,19 @@ function calculateOptimization() {
     validateInput(timeLaborProductB),
     validateInput(totalMachineHours),
     validateInput(totalLaborHours)
-  ].filter(Boolean);
+  ];
 
-  // Tampilkan error jika ada
+  if (productCount === 3) {
+    errors.push(
+      validateInput(profitC),
+      validateInput(timeMachineProductC),
+      validateInput(timeLaborProductC)
+    );
+  }
+
   const resultDiv = document.getElementById('result');
-  if (errors.length > 0) {
-    resultDiv.textContent = errors.join(' | ');
+  if (errors.filter(Boolean).length > 0) {
+    resultDiv.textContent = errors.filter(Boolean).join(' | ');
     resultDiv.classList.add('error');
     resultDiv.style.display = 'block';
     return;
@@ -94,73 +116,76 @@ function calculateOptimization() {
   const timeLaborAInHours = convertToHours(timeLaborProductA, unitLaborProductA);
   const timeLaborBInHours = convertToHours(timeLaborProductB, unitLaborProductB);
 
-  // console.log("mesin A " + timeMachineAInHours);
-  // console.log("mesin B " + timeMachineBInHours);
-  // console.log("kerja A " + timeLaborAInHours);
-  // console.log("kerja B " + timeLaborBInHours);
+  let timeMachineCInHours = 0, timeLaborCInHours = 0;
+  if (productCount === 3) {
+    timeMachineCInHours = convertToHours(timeMachineProductC, unitMachineProductC);
+    timeLaborCInHours = convertToHours(timeLaborProductC, unitLaborProductC);
+  }
 
   // Konversi total jam mesin dan jam tenaga kerja berdasarkan periode yang dipilih
   const adjustedMachineHours = convertTimeBasedOnPeriod(totalMachineHours, period);
   const adjustedLaborHours = convertTimeBasedOnPeriod(totalLaborHours, period);
 
-  // console.log("total jam mesin " + adjustedMachineHours);
-  // console.log("total jam kerja " + adjustedLaborHours);
-
-  // Optimasi menggunakan metode Linear Programming
+  // Panggil fungsi optimasi
   const result = linearOptimization(
-    profitA, profitB,
-    timeMachineAInHours, timeMachineBInHours,
-    timeLaborAInHours, timeLaborBInHours,
-    adjustedMachineHours, adjustedLaborHours
+    profitA, profitB, profitC,
+    timeMachineAInHours, timeMachineBInHours, timeMachineCInHours,
+    timeLaborAInHours, timeLaborBInHours, timeLaborCInHours,
+    adjustedMachineHours, adjustedLaborHours,
+    productCount
   );
 
-  // Tampilkan hasil optimasi
+  // Tampilkan hasilnya
   if (result.success) {
-    resultDiv.textContent = `Jumlah optimal produksi untuk periode ${period}:
-    Produk A: ${result.unitsA} unit
-    Produk B: ${result.unitsB} unit
-    Keuntungan Maksimal: Rp ${result.totalProfit}`;
-    resultDiv.classList.remove('error');
+    let resultText = `Jumlah optimal produksi untuk periode ${period}:\nProduk A: ${result.unitsA} unit\nProduk B: ${result.unitsB} unit`;
+    if (productCount === 3) {
+      resultText += `\nProduk C: ${result.unitsC} unit`;
+    }
+    resultText += `\nKeuntungan Maksimal: Rp ${result.totalProfit}`;
+    resultDiv.textContent = resultText;
   } else {
     resultDiv.textContent = 'Tidak ada solusi yang memenuhi batasan yang diberikan.';
-    resultDiv.classList.add('error');
   }
   resultDiv.style.display = 'block';
 }
 
-// Fungsi optimasi Linear Programming sederhana (sama seperti sebelumnya)
-function linearOptimization(profitA, profitB, timeMachineA, timeMachineB, timeLaborA, timeLaborB, maxMachineHours, maxLaborHours) {
+// Fungsi optimasi Linear Programming sederhana
+function linearOptimization(profitA, profitB, profitC, timeMachineA, timeMachineB, timeMachineC, timeLaborA, timeLaborB, timeLaborC, maxMachineHours, maxLaborHours, productCount) {
   let bestUnitsA = 0;
   let bestUnitsB = 0;
+  let bestUnitsC = 0;
   let bestProfit = 0;
 
   // Coba semua kombinasi unit produksi dalam batasan yang ada
   for (let unitsA = 0; unitsA <= maxMachineHours / timeMachineA; unitsA++) {
     for (let unitsB = 0; unitsB <= maxMachineHours / timeMachineB; unitsB++) {
-      // Cek apakah memenuhi batasan jam mesin dan jam tenaga kerja
-      const totalMachineUsage = (unitsA * timeMachineA) + (unitsB * timeMachineB);
-      const totalLaborUsage = (unitsA * timeLaborA) + (unitsB * timeLaborB);
+      for (let unitsC = 0; unitsC <= (productCount === 3 ? maxMachineHours / timeMachineC : 0); unitsC++) {
+        // Cek apakah memenuhi batasan jam mesin dan jam tenaga kerja
+        const totalMachineUsage = (unitsA * timeMachineA) + (unitsB * timeMachineB) + (productCount === 3 ? unitsC * timeMachineC : 0);
+        const totalLaborUsage = (unitsA * timeLaborA) + (unitsB * timeLaborB) + (productCount === 3 ? unitsC * timeLaborC : 0);
 
-      if (totalMachineUsage <= maxMachineHours && totalLaborUsage <= maxLaborHours) {
-        // Hitung keuntungan
-        const totalProfit = (unitsA * profitA) + (unitsB * profitB);
+        if (totalMachineUsage <= maxMachineHours && totalLaborUsage <= maxLaborHours) {
+          // Hitung keuntungan
+          const totalProfit = (unitsA * profitA) + (unitsB * profitB) + (productCount === 3 ? unitsC * profitC : 0);
 
-        // Perbarui jika ditemukan keuntungan yang lebih baik
-        if (totalProfit > bestProfit) {
-          bestProfit = totalProfit;
-          bestUnitsA = unitsA;
-          bestUnitsB = unitsB;
+          // Perbarui jika ditemukan keuntungan yang lebih baik
+          if (totalProfit > bestProfit) {
+            bestProfit = totalProfit;
+            bestUnitsA = unitsA;
+            bestUnitsB = unitsB;
+            bestUnitsC = unitsC;
+          }
         }
       }
     }
   }
-
 
   // Return hasil optimasi
   return {
     success: bestProfit > 0,
     unitsA: bestUnitsA,
     unitsB: bestUnitsB,
+    unitsC: productCount === 3 ? bestUnitsC : 0,
     totalProfit: bestProfit
   };
 }
