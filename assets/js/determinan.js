@@ -128,8 +128,8 @@ function calculateOptimization() {
   } else {
     resultDiv.innerHTML = `
     <span>Jumlah optimal prduksi untuk periode per ${period}</span><br>
-    <span>Produk A: ${validX.toFixed(2)}</span><br>
-    <span>Produk B: ${validY.toFixed(2)}</span><br>
+    <span>Produk A: ${validX.toFixed(0)}</span><br>
+    <span>Produk B: ${validY.toFixed(0)}</span><br>
     <span>Keuntungan maksimal: Rp ${maxProfit.toFixed(2)}</span>
     `;
     resultDiv.classList.add('success');
